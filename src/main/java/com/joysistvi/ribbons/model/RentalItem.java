@@ -2,16 +2,26 @@ package com.joysistvi.ribbons.model;
 
 import com.joysistvi.ribbons.model.enums.ReturnCondition;
 
+import java.math.BigDecimal;
+
 public class RentalItem {
 
     private int rentalId;
     private int itemId;
-    private double unitPrice;
+    private BigDecimal unitPrice;
     private ReturnCondition returnCondition;
-    private double damageFee;
+    private BigDecimal damageFee;
     private String returnNotes;
+    private String sku;
+    private String itemName;
 
-    public RentalItem(int rentalId, int itemId, double unitPrice, ReturnCondition returnCondition, double damageFee, String returnNotes) {
+    public RentalItem(int rentalId, int itemId, BigDecimal unitPrice) {
+        this.rentalId = rentalId;
+        this.itemId = itemId;
+        this.unitPrice = unitPrice;
+    }
+
+    public RentalItem(int rentalId, int itemId, BigDecimal unitPrice, ReturnCondition returnCondition, BigDecimal damageFee, String returnNotes) {
         this.rentalId = rentalId;
         this.itemId = itemId;
         this.unitPrice = unitPrice;
@@ -36,11 +46,11 @@ public class RentalItem {
         this.itemId = itemId;
     }
 
-    public double getUnitPrice() {
+    public BigDecimal getUnitPrice() {
         return unitPrice;
     }
 
-    public void setUnitPrice(double unitPrice) {
+    public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
     }
 
@@ -52,11 +62,11 @@ public class RentalItem {
         this.returnCondition = returnCondition;
     }
 
-    public double getDamageFee() {
+    public BigDecimal getDamageFee() {
         return damageFee;
     }
 
-    public void setDamageFee(double damageFee) {
+    public void setDamageFee(BigDecimal damageFee) {
         this.damageFee = damageFee;
     }
 
@@ -66,5 +76,21 @@ public class RentalItem {
 
     public void setReturnNotes(String returnNotes) {
         this.returnNotes = returnNotes;
+    }
+
+    public String getSku() {
+        return sku;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku;
+    }
+
+    public String getItemName() {
+        return itemName;
+    }
+
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
     }
 }
