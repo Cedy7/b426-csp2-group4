@@ -1,6 +1,6 @@
 package com.joysistvi.ribbons.model;
 
-public class events {
+public class Events {
     private int id;
     private String name;
     private boolean events;
