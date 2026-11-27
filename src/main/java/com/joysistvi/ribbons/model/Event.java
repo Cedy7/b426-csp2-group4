@@ -3,17 +3,17 @@ package com.joysistvi.ribbons.model;
 public class Event {
     private int id;
     private String name;
-    private boolean events;
+    private boolean archived;
 
-    public Event(String name, boolean events) {
+    public Event(String name, boolean archived) {
         this.name = name;
-        this.events = events;
+        this.archived = archived;
     }
 
-    public Event(int id, String name, boolean events) {
+    public Event(int id, String name, boolean archived) {
         this.id = id;
         this.name = name;
-        this.events = events;
+        this.archived = archived;
     }
 
     public int getId() {
@@ -24,8 +24,8 @@ public class Event {
         return name;
     }
 
-    public boolean isEvents() {
-        return events;
+    public boolean isArchived() {
+        return archived;
     }
 
     public void setId(int id) {
@@ -36,7 +36,7 @@ public class Event {
         this.name = name;
     }
 
-    public void setEvents(boolean events) {
-        this.events = events;
+    public void setArchived(boolean archived) {
+        this.archived = archived;
     }
 }
