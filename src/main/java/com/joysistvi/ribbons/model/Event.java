@@ -1,16 +1,16 @@
 package com.joysistvi.ribbons.model;
 
-public class Events {
+public class Event {
     private int id;
     private String name;
     private boolean events;
 
-    public Events(String name, boolean events) {
+    public Event(String name, boolean events) {
         this.name = name;
         this.events = events;
     }
 
-    public Events(int id, String name, boolean events) {
+    public Event(int id, String name, boolean events) {
         this.id = id;
         this.name = name;
         this.events = events;
