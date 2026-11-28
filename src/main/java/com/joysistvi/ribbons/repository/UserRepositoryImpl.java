@@ -113,6 +113,24 @@ public class UserRepositoryImpl implements UserRepository {
         }
     }
 
+    @Override // created specifically for CREATE / REGISTER User menu so that anyone can't be admin in their own accord
+    public boolean saveRegularAccount(User user){
+        String query = "INSERT INTO users (username, email, password_hash, role) VALUES (?, ?, ?, USER)";
+
+        try (Connection connection = dbConnection.connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, user.getUsername());
+            preparedStatement.setString(2, user.getEmail());
+            preparedStatement.setString(3, user.getPasswordHash());
+
+            return preparedStatement.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            System.out.println("\nCreate User Error: " + e.getMessage());
+            return false;
+        }
+    }
+
     @Override
     public boolean update(User user) {
         String query = "UPDATE users SET username = ?, email = ?, role = ? WHERE id = ?";

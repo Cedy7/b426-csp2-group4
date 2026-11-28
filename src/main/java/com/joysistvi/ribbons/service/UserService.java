@@ -15,6 +15,9 @@ public interface UserService {
 
     boolean createUser(String username, String email, String rawPassword, Role role);
 
+    // created specifically for CREATE / REGISTER User menu so that anyone can't be admin in their own accord
+    boolean createRegularAccount(String username, String email, String rawPassword);
+
     boolean updateUser(int id, String username, String email, Role role);
 
     boolean resetPassword(int id, String newPassword);

@@ -69,6 +69,35 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+    @Override // created specifically for CREATE / REGISTER User menu so that anyone can't be admin in their own accord
+    public boolean createRegularAccount(String username, String email, String rawPassword) {
+        if (username == null || username.trim().isEmpty()) {
+            System.out.println("\nValidation Error: Username is required.");
+            return false;
+        }
+
+        if (!isValidEmail(email)) {
+            System.out.println("\nValidation Error: Valid email is required.");
+            return false;
+        }
+
+        if (rawPassword == null || rawPassword.trim().length() < 6) {
+            System.out.println("\nValidation Error: Password must be at least 6 characters.");
+            return false;
+        }
+
+        if (userRepository.findByUsername(username.trim()) != null) {
+            System.out.println("\nValidation Error: Username already exists.");
+            return false;
+        }
+
+        String hashedPassword = BCrypt.hashpw(rawPassword.trim(), BCrypt.gensalt());
+
+        User user = new User(username.trim(), email.trim(), hashedPassword);
+        return userRepository.saveRegularAccount(user);
+    }
+
+
     @Override
     public boolean updateUser(int id, String username, String email, Role role) {
         if (id <= 0) {

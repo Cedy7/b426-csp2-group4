@@ -16,6 +16,9 @@ public interface UserRepository {
 
     boolean save(User user);
 
+    // created specifically for CREATE / REGISTER User menu so that anyone can't be admin in their own accord
+    boolean saveRegularAccount(User user);
+
     boolean update(User user);
 
     boolean updatePassword(int id, String passwordHash);

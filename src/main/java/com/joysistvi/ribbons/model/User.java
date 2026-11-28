@@ -11,6 +11,12 @@ public class User {
     private Role role;
     private boolean archived;
 
+    public User(String username, String email, String passwordHash) {
+        this.username = username;
+        this.email = email;
+        this.passwordHash = passwordHash;
+    }
+
     public User(String username, String email, String passwordHash, Role role) {
         this.username = username;
         this.email = email;
