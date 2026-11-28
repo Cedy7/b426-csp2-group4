@@ -7,6 +7,8 @@ import com.joysistvi.ribbons.repository.CustomerRepository;
 import com.joysistvi.ribbons.repository.CustomerRepositoryImpl;
 import com.joysistvi.ribbons.repository.EventRepository;
 import com.joysistvi.ribbons.repository.EventRepositoryImpl;
+import com.joysistvi.ribbons.repository.ItemRepository;
+import com.joysistvi.ribbons.repository.ItemRepositoryImpl;
 import com.joysistvi.ribbons.repository.SizeRepository;
 import com.joysistvi.ribbons.repository.SizeRepositoryImpl;
 import com.joysistvi.ribbons.repository.UserRepository;
@@ -17,6 +19,8 @@ import com.joysistvi.ribbons.service.CustomerService;
 import com.joysistvi.ribbons.service.CustomerServiceImpl;
 import com.joysistvi.ribbons.service.EventService;
 import com.joysistvi.ribbons.service.EventServiceImpl;
+import com.joysistvi.ribbons.service.ItemService;
+import com.joysistvi.ribbons.service.ItemServiceImpl;
 import com.joysistvi.ribbons.service.SizeService;
 import com.joysistvi.ribbons.service.SizeServiceImpl;
 import com.joysistvi.ribbons.service.UserService;
@@ -25,6 +29,7 @@ import com.joysistvi.ribbons.view.CategoryView;
 import com.joysistvi.ribbons.view.ConsoleInput;
 import com.joysistvi.ribbons.view.CustomerView;
 import com.joysistvi.ribbons.view.EventView;
+import com.joysistvi.ribbons.view.ItemView;
 import com.joysistvi.ribbons.view.SizeView;
 import com.joysistvi.ribbons.view.UserView;
 
@@ -35,6 +40,7 @@ public class App {
     private final CategoryView categoryView;
     private final SizeView sizeView;
     private final EventView eventView;
+    private final ItemView itemView;
 
     public App() {
         DbConnection dbConnection = new DbConnection();
@@ -58,6 +64,10 @@ public class App {
         EventRepository eventRepository = new EventRepositoryImpl(dbConnection);
         EventService eventService = new EventServiceImpl(eventRepository);
         this.eventView = new EventView(eventService);
+
+        ItemRepository itemRepository = new ItemRepositoryImpl(dbConnection);
+        ItemService itemService = new ItemServiceImpl(itemRepository, categoryRepository, sizeRepository);
+        this.itemView = new ItemView(itemService, categoryService, sizeService);
     }
 
     public static void main(String[] args) {
@@ -76,6 +86,7 @@ public class App {
             System.out.println("3. Manage Categories");
             System.out.println("4. Manage Sizes");
             System.out.println("5. Manage Events");
+            System.out.println("6. Manage Items");
             System.out.println("0. Exit");
 
             int choice = ConsoleInput.readInt("Choice: ");
@@ -85,6 +96,7 @@ public class App {
                 case 3 -> categoryView.handleMenu();
                 case 4 -> sizeView.handleMenu();
                 case 5 -> eventView.handleMenu();
+                case 6 -> itemView.handleMenu();
                 case 0 -> {
                     System.out.println("\nGoodbye!");
                     return;
