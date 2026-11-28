@@ -5,17 +5,22 @@ import com.joysistvi.ribbons.repository.CategoryRepository;
 import com.joysistvi.ribbons.repository.CategoryRepositoryImpl;
 import com.joysistvi.ribbons.repository.CustomerRepository;
 import com.joysistvi.ribbons.repository.CustomerRepositoryImpl;
+import com.joysistvi.ribbons.repository.SizeRepository;
+import com.joysistvi.ribbons.repository.SizeRepositoryImpl;
 import com.joysistvi.ribbons.repository.UserRepository;
 import com.joysistvi.ribbons.repository.UserRepositoryImpl;
 import com.joysistvi.ribbons.service.CategoryService;
 import com.joysistvi.ribbons.service.CategoryServiceImpl;
 import com.joysistvi.ribbons.service.CustomerService;
 import com.joysistvi.ribbons.service.CustomerServiceImpl;
+import com.joysistvi.ribbons.service.SizeService;
+import com.joysistvi.ribbons.service.SizeServiceImpl;
 import com.joysistvi.ribbons.service.UserService;
 import com.joysistvi.ribbons.service.UserServiceImpl;
 import com.joysistvi.ribbons.view.CategoryView;
 import com.joysistvi.ribbons.view.ConsoleInput;
 import com.joysistvi.ribbons.view.CustomerView;
+import com.joysistvi.ribbons.view.SizeView;
 import com.joysistvi.ribbons.view.UserView;
 
 public class App {
@@ -23,6 +28,7 @@ public class App {
     private final UserView userView;
     private final CustomerView customerView;
     private final CategoryView categoryView;
+    private final SizeView sizeView;
 
     public App() {
         DbConnection dbConnection = new DbConnection();
@@ -38,6 +44,10 @@ public class App {
         CategoryRepository categoryRepository = new CategoryRepositoryImpl(dbConnection);
         CategoryService categoryService = new CategoryServiceImpl(categoryRepository);
         this.categoryView = new CategoryView(categoryService);
+
+        SizeRepository sizeRepository = new SizeRepositoryImpl(dbConnection);
+        SizeService sizeService = new SizeServiceImpl(sizeRepository);
+        this.sizeView = new SizeView(sizeService);
     }
 
     public static void main(String[] args) {
@@ -54,6 +64,7 @@ public class App {
             System.out.println("1. Manage Users");
             System.out.println("2. Manage Customers");
             System.out.println("3. Manage Categories");
+            System.out.println("4. Manage Sizes");
             System.out.println("0. Exit");
 
             int choice = ConsoleInput.readInt("Choice: ");
@@ -61,6 +72,7 @@ public class App {
                 case 1 -> userView.handleMenu(null);
                 case 2 -> customerView.handleMenu();
                 case 3 -> categoryView.handleMenu();
+                case 4 -> sizeView.handleMenu();
                 case 0 -> {
                     System.out.println("\nGoodbye!");
                     return;

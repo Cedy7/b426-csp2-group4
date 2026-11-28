@@ -11,76 +11,127 @@ public class SizeRepositoryImpl implements SizeRepository {
 
     private final DbConnection dbConnection;
 
-    public SizeRepositoryImpl(DbConnection dbConnection) { this.dbConnection = dbConnection; }
-
-    @Override
-    public Size findById(int id) {
-        String query = "SELECT * FROM sizes WHERE id = ?";
-
-        try (Connection connection = dbConnection.connect();
-            PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-
-            preparedStatement.setInt(1, id);
-
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    return new Size(resultSet.getInt("id"),
-                            resultSet.getString("code"),
-                            resultSet.getInt("sort_order")
-                            );
-                }
-            }
-        } catch (SQLException e) {
-            System.out.println("\nFind Size By Id Error: " + e.getMessage());
-        }
-
-        return null;
+    public SizeRepositoryImpl(DbConnection dbConnection) {
+        this.dbConnection = dbConnection;
     }
 
     @Override
-    public List<Size> findAllAvailableSize() {
+    public List<Size> findAll() {
         List<Size> sizes = new ArrayList<>();
-        String query = "SELECT * FROM sizes ORDER BY sort_order DESC";
+        String query = "SELECT * FROM sizes ORDER BY sort_order ASC, id ASC";
 
         try (Connection connection = dbConnection.connect();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(query)
         ) {
             while (resultSet.next()) {
-             sizes.add(new Size(
-                     resultSet.getInt("id"),
-                     resultSet.getString("code"),
-                     resultSet.getInt("sort_order")));
+                sizes.add(mapSize(resultSet));
             }
         } catch (SQLException e) {
-            System.out.println("\nRead All Sizes Error: " + e.getMessage());
+            System.out.println("\nRead Sizes Error: " + e.getMessage());
         }
 
         return sizes;
     }
 
     @Override
-    public List<Size> findBySortorder(int sortOrder) {
-        List<Size> sizes = new ArrayList<>();
-        String query = "SELECT * FROM sizes WHERE sort_order = ?";
+    public Size findById(int id) {
+        String query = "SELECT * FROM sizes WHERE id = ?";
 
         try (Connection connection = dbConnection.connect();
-            PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-
-            preparedStatement.setInt(1, sortOrder);
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, id);
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                while (resultSet.next()) {
-                    sizes.add(new Size(
-                            resultSet.getString("code"),
-                            resultSet.getInt("sortOrder")
-                    ));
+                if (resultSet.next()) {
+                    return mapSize(resultSet);
                 }
             }
         } catch (SQLException e) {
-            System.out.println("Find Size By Order Error: " + e.getMessage());
+            System.out.println("\nFind Size Error: " + e.getMessage());
         }
 
-        return sizes;
+        return null;
+    }
+
+    @Override
+    public Size findByCode(String code) {
+        String query = "SELECT * FROM sizes WHERE code = ?";
+
+        try (Connection connection = dbConnection.connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, code);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return mapSize(resultSet);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("\nFind Size Error: " + e.getMessage());
+        }
+
+        return null;
+    }
+
+    @Override
+    public boolean save(Size size) {
+        String query = "INSERT INTO sizes (code, sort_order) VALUES (?, ?)";
+
+        try (Connection connection = dbConnection.connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, size.getCode());
+            preparedStatement.setInt(2, size.getSortOrder());
+
+            return preparedStatement.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            System.out.println("\nCreate Size Error: " + e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public boolean update(Size size) {
+        String query = "UPDATE sizes SET code = ?, sort_order = ? WHERE id = ?";
+
+        try (Connection connection = dbConnection.connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, size.getCode());
+            preparedStatement.setInt(2, size.getSortOrder());
+            preparedStatement.setInt(3, size.getId());
+
+            return preparedStatement.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            System.out.println("\nUpdate Size Error: " + e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public boolean deleteById(int id) {
+        String query = "DELETE FROM sizes WHERE id = ?";
+
+        try (Connection connection = dbConnection.connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, id);
+
+            return preparedStatement.executeUpdate() > 0;
+
+        } catch (SQLIntegrityConstraintViolationException e) {
+            System.out.println("\nDelete Size Error: This size is used by one or more items and cannot be deleted.");
+            return false;
+        } catch (SQLException e) {
+            System.out.println("\nDelete Size Error: " + e.getMessage());
+            return false;
+        }
+    }
+
+    private Size mapSize(ResultSet resultSet) throws SQLException {
+        int id = resultSet.getInt("id");
+        String code = resultSet.getString("code");
+        int sortOrder = resultSet.getInt("sort_order");
+        return new Size(id, code, sortOrder);
     }
 }

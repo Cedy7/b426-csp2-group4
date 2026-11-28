@@ -6,11 +6,15 @@ import java.util.List;
 
 public interface SizeRepository {
 
+    List<Size> findAll();
+
     Size findById(int id);
 
-    List<Size> findAllAvailableSize();
+    Size findByCode(String code);
 
-    List<Size> findBySortorder(int sortOrder);
+    boolean save(Size size);
 
+    boolean update(Size size);
 
+    boolean deleteById(int id);
 }
